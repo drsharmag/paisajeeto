@@ -229,22 +229,22 @@
     {
       "method": "UPI",
       "minCoins": 10,
-      "note": "100 coins = ₹1. Paid within 48 hours."
+      "note": "1 coins = ₹1. Paid within 48 hours."
     },
     {
       "method": "Paytm Wallet",
       "minCoins": 10,
-      "note": "100 coins = ₹1. Paid within 48 hours."
+      "note": "1 coins = ₹1. Paid within 48 hours."
     },
     {
       "method": "Amazon Gift Card",
       "minCoins": 5,
-      "note": "100 coins = ₹1 of gift card value."
+      "note": "10coins = ₹1 of gift card value."
     },
     {
       "method": "Kotak",
       "minCoins": 10,
-      "note": ""
+      "note": "1 coin = ₹1"
     }
   ],
   "referral": {
