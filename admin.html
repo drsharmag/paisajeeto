@@ -31,7 +31,7 @@
   <div class="card">
     <h2>1 · Load your current config</h2>
     <label>Config URL (where your app reads it from)</label>
-    <input id="cfgUrl" type="text" placeholder="https://drsharmag.github.io/paisajeeto/config.json">
+    <input id="cfgUrl" type="text" value="https://drsharmag.github.io/paisajeeto/config.json" placeholder="https://drsharmag.github.io/paisajeeto/config.json">
     <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
       <button class="btn" id="loadUrl">Load from URL</button>
       <button class="btn ghost" id="loadFileBtn">Open config.json file</button>
@@ -261,13 +261,13 @@ function collect(){
 }
 
 $("loadUrl").addEventListener("click", async () => {
-  try { const r = await fetch($("cfgUrl").value.trim(), { cache: "no-store" }); fill(await r.json()); msg("Config loaded ✓"); }
+  try { const r = await fetch($("cfgUrl").value.trim(), { cache: "no-store" }); const j = await r.json(); if (!j || !Array.isArray(j.games) || !j.games.length) throw new Error("bad config"); fill(j); window.__CFG_LOADED = true; msg("Config loaded ✓"); }
   catch(e){ alert("Could not load that URL. Check it opens in your browser."); }
 });
 $("loadFileBtn").addEventListener("click", () => $("loadFile").click());
 $("loadFile").addEventListener("change", e => {
   const f = e.target.files[0]; if (!f) return;
-  f.text().then(t => { fill(JSON.parse(t)); msg("File loaded ✓"); });
+  f.text().then(t => { fill(JSON.parse(t)); window.__CFG_LOADED = true; msg("File loaded ✓"); });
 });
 $("download").addEventListener("click", () => {
   const blob = new Blob([JSON.stringify(collect(), null, 2)], { type: "application/json" });
@@ -277,6 +277,7 @@ $("download").addEventListener("click", () => {
 $("ghSave").addEventListener("click", async () => {
   const owner = $("ghOwner").value.trim(), repo = $("ghRepo").value.trim(), path = $("ghPath").value.trim(), tok = $("ghToken").value.trim();
   if (!owner || !repo || !tok){ alert("Fill owner, repo and token."); return; }
+  if (!window.__CFG_LOADED){ alert("⚠ STOP — the live config was NOT loaded in this panel session, so the panel is showing blank defaults. Saving now would WIPE your real config (games, payouts, email). Tap 'Load' at the top first, check that your games and payout methods are visible, then save."); return; }
   const api = "https://api.github.com/repos/" + owner + "/" + repo + "/contents/" + path;
   const hdr = { "Authorization": "Bearer " + tok, "Accept": "application/vnd.github+json" };
   try {
@@ -292,6 +293,8 @@ $("ghSave").addEventListener("click", async () => {
 });
 
 fill(JSON.parse(JSON.stringify(DEFAULTS)));
+/* auto-load the live config on open so the panel never sits on blank defaults */
+(async () => { try { const r = await fetch($("cfgUrl").value.trim(), { cache: "no-store" }); const j = await r.json(); if (j && Array.isArray(j.games) && j.games.length){ fill(j); window.__CFG_LOADED = true; msg("Live config loaded automatically ✓"); } } catch(e){} })();
 </script>
 </body>
 </html>
