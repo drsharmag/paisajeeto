@@ -59,7 +59,7 @@
   },
   "tasks": [],
   "payouts": [],
-  "payoutFormUrl": "Name, UPI ID / Paytm number, Method (UPI/Paytm/Kotak/Gift Card), Coins",
+  "payoutFormUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfpRiv8VilnOGG-knQsYQNQ37h3ScPeo8EirPMrMUZYLDY0yg/viewform?usp=publish-editor",
   "supportWhatsapp": "",
   "supportEmail": ""
 }
